@@ -37,19 +37,55 @@ public class SecondaryauthorizationdetailsStepDef {
 	      .getWebElements(Secondaryauthorizationdeatils.class.getSimpleName());
 	  Secondaryauthorizationdeatils secondaryauthorizationdeatils = new Secondaryauthorizationdeatils();
 	  String customMessage = null;
-	  
+	  private List<WebElementDetails> loginWebElementsList = JXMLParser.getInstance()
+		      .getWebElements(Signin.class.getSimpleName());
 	@Given("^user is on update secondary authorization details screen$")
 	public void user_is_on_update_secondary_authorization_details_screen() throws Throwable {
 		try {
-			Thread.sleep(2000);
-			WebElementDetails userNameBtnObj = webElementsList.get(0);
-			secondaryauthorizationdeatils.userName(userNameBtnObj).click();
+			SignOutStepDef signOutStepDef = new SignOutStepDef();
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			signOutStepDef.click_on_Logout_button();
 			
+			customMessage = "Enter Username";
+		      WebElementDetails userNameTextBoxObj = loginWebElementsList.get(0);
+	       // System.out.println("<<<<<<>>>>>>>>>"+Constants.userName);	      
+        		login.Username(userNameTextBoxObj).sendKeys(Constants.userName);
+			
+
+		      customMessage = "Enter Password";
+		      WebElementDetails passwordTextBoxObj = loginWebElementsList.get(1);
+		      login.Password(passwordTextBoxObj).sendKeys(passwordTextBoxObj.getData());
+		//System.out.println("<<<<<<>>>>>>>>>"+passwordTextBoxObj.getData());	
+		      login.Username(userNameTextBoxObj).click();	
+
+		      customMessage = "Clicking on Signin Button";
+		      WebElementDetails loginBtnObj = loginWebElementsList.get(2);
+		      login.loginbtn(loginBtnObj).click();
+			
+			Thread.sleep(3000);
+			WebElementDetails userNameBtnObj = webElementsList.get(0);
+			Thread.sleep(5000);
+			//System.out.println(userNameBtnObj.getId());
+			
+			/* Change Password */
+			driver.findElement(By.id("old_pswd_tb")).sendKeys("sciits");
+			Thread.sleep(1000);
+			driver.findElement(By.id("new_pswd_tb")).sendKeys("welcome_1");
+			Thread.sleep(500);
+			driver.findElement(By.id("confirm_new_pswd_tb")).sendKeys("welcome_1");
+			Thread.sleep(500);
+			driver.findElement(By.id("change_pswd_btn")).click();
+			
+			/*driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			secondaryauthorizationdeatils.userName(userNameBtnObj).click();
+						
 			WebElementDetails updateSecondaryAuthObj = webElementsList.get(1);
-			secondaryauthorizationdeatils.updateSecondaryAuthrization(updateSecondaryAuthObj).click();
+			secondaryauthorizationdeatils.updateSecondaryAuthrization(updateSecondaryAuthObj).click();*/
 			
 			Thread.sleep(1000);
-			Assert.assertEquals("Update Secondary Authorization Details", driver.findElement(By.tagName("h3")).getText());
+			/* DIrectly entering details instead of navigating to Secondary Auth screen */
+			
+			//Assert.assertEquals("Secondary Authorization Details", driver.findElement(By.tagName("h3")).getText());
 		    } catch (Exception e) {
 		      new TestAmigoException().handleException(e, customMessage, AppSetup.getMethodName());
 		    } catch (java.lang.AssertionError e) {
@@ -86,6 +122,9 @@ public class SecondaryauthorizationdetailsStepDef {
 			
 			WebElementDetails updateBtnObj = webElementsList.get(6);
 			secondaryauthorizationdeatils.update(updateBtnObj).click();
+			/*SignOutStepDef signOutStepDef = new SignOutStepDef();
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			signOutStepDef.click_on_Logout_button();*/
 			
 		    } catch (Exception e) {
 		      new TestAmigoException().handleException(e, customMessage, AppSetup.getMethodName());
